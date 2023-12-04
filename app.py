@@ -134,9 +134,8 @@ with st.sidebar:
 
     bullet_col1, bullet_col2 = st.columns(2)
 
-    with bullet_col1:
-        with st.expander("General Aspects:", expanded=False):
-            general_aspects = """
+    with st.expander("General Aspects:", expanded=False):
+        general_aspects = """
             - <span class="copyable-text">Policy of Administration and Financial Aid</span>
             - <span class="copyable-text" >Career and Academic Opportunities</span>
             - <span class="copyable-text" >Academic Quality and online learning</span>
@@ -144,13 +143,12 @@ with st.sidebar:
             - <span class="copyable-text">Diversity and Inclusion</span>
             - <span class="copyable-text">Technology and Computer Labs</span>
             """
-            st.markdown(general_aspects, unsafe_allow_html=True)
+        st.markdown(general_aspects, unsafe_allow_html=True)
 
-    with bullet_col2:
-        with st.expander("Major Specific Aspects:", expanded=False):
-            major_specific_aspects = "\n".join(f"- <span class='copyable-text'>{topic}</span>" for topic in major_topics)
-            st.markdown(major_specific_aspects, unsafe_allow_html=True)
 
+    with st.expander("Major Specific Aspects:", expanded=False):
+        major_specific_aspects = "\n".join(f"- <span class='copyable-text'>{topic}</span>" for topic in major_topics)
+        st.markdown(major_specific_aspects, unsafe_allow_html=True)
 
 
 

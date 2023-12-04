@@ -8,6 +8,7 @@ from collections import Counter
 import pickle
 import zipfile
 import os
+import gdown
 class EmbeddingsCalculator:
     def __init__(self, model_name='bert-base-uncased'):
         self.tokenizer = BertTokenizer.from_pretrained(model_name)
@@ -15,7 +16,11 @@ class EmbeddingsCalculator:
         with open('stop_words.pkl', 'rb') as file:
             self.stop_words = pickle.load(file)
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.embedding_file='major_embedding_bert.zip'
+        google_drive_link = 'https://drive.google.com/uc?id=1pl2sUFHXWrh3sCUfRL8gD7T9JH-WQLiX'
+        self.embedding_file = 'major_embedding_bert.zip'
+        
+        if not os.path.exists(self.embedding_file):
+            gdown.download(google_drive_link, self.embedding_file, quiet=False)
 
     def preprocess(self, text):
         words = self.tokenizer.tokenize(text.lower())

@@ -154,6 +154,7 @@ with st.sidebar:
            """,
            unsafe_allow_html=True,
         )
+    st.write(" ") 
 
   
     st.info("To access the official chat bot trained for over 1000+ Universities, check out [Reach Best](https://app.reachbest.co/signup)!", icon="🧠")
@@ -481,6 +482,8 @@ if st.session_state.test >= 1:
     st.write(" ") 
     default_option = "Select a University to view reviews"
     university_options = [default_option] + list(st.session_state.df_final["University"].unique())
+    advice_Review = "🔍 <span style='font-size: 18px; font-weight: bold;'> Here are some reviews that maybe relevant to your answer:</span>"
+    st.markdown(advice_Review, unsafe_allow_html=True)
     selected_university = st.selectbox("", university_options)
     st.session_state.selected_university=selected_university
     if selected_university and selected_university != default_option:

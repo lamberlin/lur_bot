@@ -35,19 +35,59 @@ def get_answer(input_text, input_major):
     assessment, top_majors_list = ta.evaluate_major(input_text, input_major)
 
     return assessment, top_majors_list
-# def weighted_accuracy(input_text, embeddings_calculator):
-#     topic_probabilities_df = embeddings_calculator.calculate_topic_probabilities(input_text)
-#     topic_probabilities_df = topic_probabilities_df[topic_probabilities_df['sub_topic'] != 'Student opportunities']
-#     total_probability = topic_probabilities_df['topic_probability'].sum()
-#     topic_probabilities_df['normalized_probability'] = topic_probabilities_df['topic_probability'] / total_probability
-#     accuracy_df = pd.read_csv('accuracy_per_sub_topic.csv')
-#     accuracy_df['Accuracy'] = pd.to_numeric(accuracy_df['Accuracy'], errors='coerce')
-#     accuracy_dict = accuracy_df.set_index('Sub_Topic')['Accuracy'].to_dict()
-#     weighted_avg_accuracy = sum(
-#         topic_probabilities_df['normalized_probability'] *
-#         topic_probabilities_df['sub_topic'].apply(lambda topic: accuracy_dict.get(topic, 0))
-#     )
-#     return weighted_avg_accuracy
+
+def map_to_original_major(formatted_major):
+    term_replace = {
+        'Accounting.and.finance': 'accounting.and.finance',
+        'Agriculture Environment': 'agriculture_environment',
+        'Archeology': 'archeology',
+        'Architecture Art': 'architecture_art',
+        'Biology': 'biology',
+        'Chemical.engineering': 'chemical.engineering',
+        'Communication Info': 'communication_info',
+        'Development.studies': 'development.studies',
+        'Economics': 'economics',
+        'Electrical & Comp. Engineering': 'electrical & comp. engineering',
+        'English.language.and.literature': 'english.language.and.literature',
+        'History': 'history',
+        'Linguistics': 'linguistics',
+        'Mathematics Statistic': 'mathematics_statistic',
+        'Mechanical.engineering': 'mechanical.engineering',
+        'Medicine Health': 'medicine_health',
+        'Philosophy': 'philosophy',
+        'Physics': 'physics',
+        'Political.science': 'political.science',
+        'Psychology': 'psychology',
+        'Sociology': 'sociology'
+    }
+
+    return term_replace.get(formatted_major, "Unknown Major")
+def map_to_formatted_major(original_major):
+    original_to_formatted = {
+        'accounting.and.finance': 'Accounting.and.finance',
+        'agriculture_environment': 'Agriculture Environment',
+        'archeology': 'Archeology',
+        'architecture_art': 'Architecture Art',
+        'biology': 'Biology',
+        'chemical.engineering': 'Chemical.engineering',
+        'communication_info': 'Communication Info',
+        'development.studies': 'Development.studies',
+        'economics': 'Economics',
+        'electrical & comp. engineering': 'Electrical & Comp. Engineering',
+        'english.language.and.literature': 'English.language.and.literature',
+        'history': 'History',
+        'linguistics': 'Linguistics',
+        'mathematics_statistic': 'Mathematics Statistic',
+        'mechanical.engineering': 'Mechanical.engineering',
+        'medicine_health': 'Medicine Health',
+        'philosophy': 'Philosophy',
+        'physics': 'Physics',
+        'political.science': 'Political.science',
+        'psychology': 'Psychology',
+        'sociology': 'Sociology'
+    }
+
+    return original_to_formatted.get(original_major, "Unknown Major")
 
 st.set_page_config(
     page_title="Reach Best LUR Bot", layout="centered", page_icon="logo.png", initial_sidebar_state="expanded"
@@ -57,12 +97,8 @@ st.write(
     '<h1 style="color: #E1930F;">Reach Best LUR Bot</h1>'
     '</div>',
     unsafe_allow_html=True)
+st.write(" ") 
 
-# description = """
-# <div style='font-size: 24px; text-align: center;'>
-#     Find Universities that match with you based on your ideal college life
-# </div>
-# """
 st.write(
     """
     <style>
@@ -101,7 +137,6 @@ st.write(
 )
 st.divider()
 
-st.write(" ") 
 ID_weight = pd.read_csv('./ID weight_review.csv')
 
 
@@ -122,33 +157,58 @@ with st.sidebar:
 
   
     st.info("To access the official chat bot trained for over 1000+ Universities, check out [Reach Best](https://app.reachbest.co/signup)!", icon="🧠")
-    bullet_col1, bullet_col2 = st.columns(2, gap="large")
-    major_topics = [
-        "Academic Excellence and Opportunities",
-        "Social networks and Campus Atmosphere",
-        "Dynamics and individual experiences",
-        "Campus Beauty and Resources",
-        "Transfer Student Experience",
-        "Career and Major Focus"
+#     major_topics = [
+#         "Academic Excellence and Opportunities",
+#         "Social networks and Campus Atmosphere",
+#         "Dynamics and individual experiences",
+#         "Campus Beauty and Resources",
+#         "Transfer Student Experience",
+#         "Career and Major Focus"
+#     ]
+
+
+#     with st.expander("General Aspects:", expanded=False):
+#         general_aspects = """
+#             - <span class="copyable-text">Policy of Administration and Financial Aid</span>
+#             - <span class="copyable-text" >Career and Academic Opportunities</span>
+#             - <span class="copyable-text" >Academic Quality and online learning</span>
+#             - <span class="copyable-text" >Admission</span>
+#             - <span class="copyable-text">Diversity and Inclusion</span>
+#             - <span class="copyable-text">Technology and Computer Labs</span>
+#             """
+#         st.markdown(general_aspects, unsafe_allow_html=True)
+
+
+#     with st.expander("Major Specific Aspects:", expanded=False):
+#         major_specific_aspects = "\n".join(f"- <span class='copyable-text'>{topic}</span>" for topic in major_topics)
+#         st.markdown(major_specific_aspects, unsafe_allow_html=True)
+    st.write(" ") 
+
+    general_questions = [
+        "What type of friends do you get along with and why?",
+        "What’s your favorite season of the year and why? Do you prefer sunny, cloudy, rainy or snowy days?",
+        "What do you like doing for fun? What type of places do you like hanging out at and why?",
+        "What is the one thing you love the most about school and why?",
+        "Do you prefer to dress casually or more formally and why?",
+        "I want to answer multiple questions here",
+        "I want to discuss other aspects of my ideal college life"
     ]
+    major_questions = [
+        "What do you call you favourite teacher,Mr or first name.Do you like it? Why?",
+        "What's the way of teaching of your favourite teacher,lecture vs discussion, what's the characteristic you most appreciate? Why?", 
+        "Do you prefer taking exams or writing research papers? Why?",
+        "Would you rather be the only student in a super advanced class or be in a group class where you learn at the same rhythm with your classmates? Why?",
+        "Which do you like, get higher scores for more attending and engaging vs or leting exams to dertermain your grade? Why?",
+        "Describe the vibe in your favourite class, were you participating a lot, why?",
+        "Which do you hate more, monthly long projects vs weekly homework, why?",
+        "For the  project your most proud of,which parts do you enjoy,reading literature and find scientific solution? Why?",
+        "I want to answer multiple questions here",
+        "I want to discuss other aspects of my major specific preference"
+    ]
+    selected_general_question = st.sidebar.selectbox("Choose your first question", general_questions, key="select_general")
+    st.write(" ") 
 
-    bullet_col1, bullet_col2 = st.columns(2)
-
-    with st.expander("General Aspects:", expanded=False):
-        general_aspects = """
-            - <span class="copyable-text">Policy of Administration and Financial Aid</span>
-            - <span class="copyable-text" >Career and Academic Opportunities</span>
-            - <span class="copyable-text" >Academic Quality and online learning</span>
-            - <span class="copyable-text" >Admission</span>
-            - <span class="copyable-text">Diversity and Inclusion</span>
-            - <span class="copyable-text">Technology and Computer Labs</span>
-            """
-        st.markdown(general_aspects, unsafe_allow_html=True)
-
-
-    with st.expander("Major Specific Aspects:", expanded=False):
-        major_specific_aspects = "\n".join(f"- <span class='copyable-text'>{topic}</span>" for topic in major_topics)
-        st.markdown(major_specific_aspects, unsafe_allow_html=True)
+    selected_major_question = st.sidebar.selectbox("Choose your second question", major_questions, key="select_major")
 
 
 
@@ -160,15 +220,27 @@ with col4:
     )
 
 with col5:
-    major_options = ['architecture_design', 'biology', 'computer.science',
-                     'electrical.engineering', 'english.language.and.literature',
-                     'linguistics', 'history', 'development.studies', 'philosophy',
-                     'physics', 'psychology', 'political.science', 'sociology',
-                     'accounting.and.finance', 'communication_info', 'economics',
-                     'archeology', 'agriculture_environment', 'education', 'arts',
-                     'medicine_health', 'chemical.engineering', 'theology_theater',
-                     'law', 'mechanical.engineering', 'sports.sciences.and.management',
-                     'civil.engineering', 'geography']
+    major_options = ['Accounting.and.finance',
+                 'Agriculture Environment',
+                 'Archeology',
+                 'Architecture Art',
+                 'Biology',
+                 'Chemical.engineering',
+                 'Communication Info',
+                 'Development.studies',
+                 'Economics',
+                 'Electrical & Comp. Engineering',
+                 'English.language.and.literature',
+                 'History',
+                 'Linguistics',
+                 'Mathematics Statistic',
+                 'Mechanical.engineering',
+                 'Medicine Health',
+                 'Philosophy',
+                 'Physics',
+                 'Political.science',
+                 'Psychology',
+                 'Sociology']
 
     sorted_major_options = sorted(major_options)
 
@@ -178,35 +250,21 @@ with col5:
 
 st.write(" ") 
 
-general_questions = [
-    "What type of friends do you get along with and why?",
-    "What’s your favorite season of the year and why? Do you prefer sunny, cloudy, rainy or snowy days?",
-    "What do you like doing for fun? What type of places do you like hanging out at and why?",
-    "What is the one thing you love the most about school and why?",
-    "Do you prefer to dress casually or more formally and why?"
-]
-major_questions = [
-    "Who is your favorite teacher and why?",
-    "Do you prefer taking exams or writing research papers? Why?",
-    "Would you rather be the only student in a super advanced class or be in a group class where you learn at the same rhythm with your classmates? Why?"
-]
+
 if 'random_question1' not in st.session_state:
     st.session_state['random_question1'] = random.choice(general_questions)
 if 'random_question2' not in st.session_state:
     st.session_state['random_question2'] = random.choice(major_questions)
-# question = "Describe your ideal college in the above left side aspects:"
-# question2 = "Describe your ideal college in the above right side aspects:"
-# answer1 = st.text_input(question, key="text_area1", placeholder="Write here")
-st.write(st.session_state['random_question1'], unsafe_allow_html=True)
 
-answer1 = st.text_area(st.session_state['random_question1'], key="text_area1",placeholder='Write here',label_visibility='collapsed')
-st.write(" ") 
-st.write(st.session_state['random_question2'], unsafe_allow_html=True)
+st.write(selected_general_question, unsafe_allow_html=True)
 
-answer2 = st.text_area(st.session_state['random_question2'], key="text_area2",placeholder='Write here',label_visibility='collapsed')
+answer1 = st.text_area(selected_general_question, key="text_area1",placeholder='Write here',label_visibility='collapsed')
 st.write(" ") 
-# answer2 = st.text_input(question2, key="text_area2",placeholder='Write here')
+st.write(selected_major_question, unsafe_allow_html=True)
+
+answer2 = st.text_area(selected_major_question, key="text_area2",placeholder='Write here',label_visibility='collapsed')
 st.write(" ") 
+
 if username:
     if username in ID_weight["name"].tolist():
         user_data = ID_weight[ID_weight["name"] == username].iloc[-1]
@@ -216,7 +274,7 @@ if username:
             'Your Last Answer': [user_data["lastphrase1"], user_data["lastphrase2"]]
         })
 
-        st.write(user_last_answers.to_html(index=False), unsafe_allow_html=True)
+#         st.write(user_last_answers.to_html(index=False), unsafe_allow_html=True)
         st.write("<br>", unsafe_allow_html=True)
 
         weight_flag= float(user_data["Model1weight"]) if 'Model1weight' in user_data and isinstance(user_data["Model1weight"], (int, float)) else 0.5
@@ -291,7 +349,8 @@ if st.button("Recommend"):
 #             st.success("✅Recommend success")
             cs1 = get_mcs(answer1)
             cs2 = get_gcs(answer2)
-            unianswer, lists = get_answer(answer2, major)
+            unianswer, lists = get_answer(answer2, map_to_original_major(major))
+            lists = [map_to_formatted_major(major) for major in lists]
 
             if df_final is not None:
                 st.session_state.df_final = df_final
@@ -312,26 +371,107 @@ if st.button("Recommend"):
             if lists is not None:
                 st.session_state.lists = lists                
 if st.session_state.test >= 1:
+    
+
+    st.write(
+        """
+        <style>
+        h3 {
+            text-align: center;
+            color: #80ACD4;
+            margin-top: -20px; 
+            font-size: 24px; 
+        }
+
+        </style>
+        <h3>Here are your personalized results</h3>
+        """,
+        unsafe_allow_html=True,
+    )    
+#     st.header("Here are your personalized results")
+    st.divider()
+    if st.session_state.unianswer == 'perfect':
+        advice_message = "🤩 <span style='font-size: 18px; font-weight: bold;'>The major you choose could be a perfect fit for you. Here are our pieces of advices:</span>"
+        st.markdown(advice_message, unsafe_allow_html=True)
+        col1, col2, col3 = st.columns(3)
+        advice_list = lists[:3] 
+        with col1:
+            st.markdown("<div style='text-align: center;'>"
+                "<span style='color: orange; font-size: 20px; font-weight: bold;'>"
+                f"{advice_list[0]}</span></div>", unsafe_allow_html=True)
+        with col2:
+            st.markdown("<div style='text-align: center;'>"
+                "<span style='color: orange; font-size: 20px; font-weight: bold;'>"
+                f"{advice_list[1]}</span></div>", unsafe_allow_html=True)
+        with col3:
+            st.markdown("<div style='text-align: center;'>"
+                "<span style='color: orange; font-size: 20px; font-weight: bold;'>"
+                f"{advice_list[2]}</span></div>", unsafe_allow_html=True)        
+
+    elif st.session_state.unianswer == 'good':
+        advice_message = "😊 <span style='font-size: 18px; font-weight: bold;'>The major you choose could be a good fit for you. Here are our pieces of advices:</span>"
+        st.markdown(advice_message, unsafe_allow_html=True)
+        col1, col2, col3 = st.columns(3)
+        advice_list = lists[:3] 
+        with col1:
+            st.markdown("<div style='text-align: center;'>"
+                "<span style='color: orange; font-size: 20px; font-weight: bold;'>"
+                f"{advice_list[0]}</span></div>", unsafe_allow_html=True)
+        with col2:
+            st.markdown("<div style='text-align: center;'>"
+                "<span style='color: orange; font-size: 20px; font-weight: bold;'>"
+                f"{advice_list[1]}</span></div>", unsafe_allow_html=True)
+        with col3:
+            st.markdown("<div style='text-align: center;'>"
+                "<span style='color: orange; font-size: 20px; font-weight: bold;'>"
+                f"{advice_list[2]}</span></div>", unsafe_allow_html=True)        
+      
+
+    elif st.session_state.unianswer == 'reasonable': 
+        advice_message = "😬 <span style='font-size: 18px; font-weight: bold;'>The major you choose could be a reasonable fit for you. Here are our pieces of advices:</span>"
+        st.markdown(advice_message, unsafe_allow_html=True)
+        col1, col2, col3 = st.columns(3)
+        advice_list = lists[:3] 
+        with col1:
+            st.markdown("<div style='text-align: center;'>"
+                "<span style='color: orange; font-size: 20px; font-weight: bold;'>"
+                f"{advice_list[0]}</span></div>", unsafe_allow_html=True)
+        with col2:
+            st.markdown("<div style='text-align: center;'>"
+                "<span style='color: orange; font-size: 20px; font-weight: bold;'>"
+                f"{advice_list[1]}</span></div>", unsafe_allow_html=True)
+        with col3:
+            st.markdown("<div style='text-align: center;'>"
+                "<span style='color: orange; font-size: 20px; font-weight: bold;'>"
+                f"{advice_list[2]}</span></div>", unsafe_allow_html=True)        
+ 
+    elif st.session_state.unianswer == 'bad':
+    
+        advice_message = "😢 <span style='font-size: 18px; font-weight: bold;'>The major you choose could be a bad fit for you. Here are our pieces of advice for you:</span>"
+        st.markdown(advice_message, unsafe_allow_html=True)
+        col1, col2, col3 = st.columns(3)
+        advice_list = lists[:3] 
+        with col1:
+            st.markdown("<div style='text-align: center;'>"
+                "<span style='color: orange; font-size: 20px; font-weight: bold;'>"
+                f"{advice_list[0]}</span></div>", unsafe_allow_html=True)
+        with col2:
+            st.markdown("<div style='text-align: center;'>"
+                "<span style='color: orange; font-size: 20px; font-weight: bold;'>"
+                f"{advice_list[1]}</span></div>", unsafe_allow_html=True)
+        with col3:
+            st.markdown("<div style='text-align: center;'>"
+                "<span style='color: orange; font-size: 20px; font-weight: bold;'>"
+                f"{advice_list[2]}</span></div>", unsafe_allow_html=True)        
+ 
+    st.write(" ") 
+    st.write(" ") 
+
+    advice_school = "🏫 <span style='font-size: 18px; font-weight: bold;'> Here are our recommended schools just for you:</span>"
+    st.markdown(advice_school, unsafe_allow_html=True)
     st.write(" ") 
 
     st.dataframe(st.session_state.df_final, use_container_width=True, hide_index=True)
-    st.write(" ") 
-    if st.session_state.unianswer == 'perfect':
-        advice_message = "🤩 The major you choose is a perfect fit for you. Here are our pieces of advice for you: "
-        advice_list = ', '.join(st.session_state.lists[:3])  
-        st.write(advice_message + advice_list)
-    elif st.session_state.unianswer == 'good':
-        advice_message ="😊 the major you choose is a good fit for you,here are our advise for you:"
-        advice_list = ', '.join(st.session_state.lists[:3])  
-        st.write(advice_message + advice_list)
-    elif st.session_state.unianswer == 'reasonable':
-        advice_message ="😬 the major you choose is a reasonable fit for you,here are our advise for you:"
-        advice_list = ', '.join(st.session_state.lists[:3])  
-        st.write(advice_message + advice_list)        
-    elif st.session_state.unianswer == 'bad':
-        advice_message ="😢 the major you choose is a bad fit for you,here are our advise for you:"
-        advice_list = ', '.join(st.session_state.lists[:3])  
-        st.write(advice_message + advice_list)      
     st.write(" ") 
     st.info(f'How confident is the model? \n\nBased on your personal weight, our model accuracy is  **{100*round((0.41*(1-st.session_state.weight)+0.48*st.session_state.weight), 2)}%** ',icon="ℹ")
     st.write(" ") 

@@ -90,11 +90,11 @@ def map_to_formatted_major(original_major):
     return original_to_formatted.get(original_major, "Unknown Major")
 
 st.set_page_config(
-    page_title="Reach Best LCM Bot", layout="centered", page_icon="logo.png", initial_sidebar_state="expanded"
+    page_title="Reach Best ICL Bot", layout="centered", page_icon="logo.png", initial_sidebar_state="expanded"
 )
 st.write(
     '<div style="text-align: center;">'
-    '<h1 style="color: #E1930F;">Reach Best LCM Bot</h1>'
+    '<h1 style="color: #E1930F;">Reach Best ICL Bot</h1>'
     '</div>',
     unsafe_allow_html=True)
 st.write(" ") 
@@ -154,10 +154,11 @@ with st.sidebar:
            """,
            unsafe_allow_html=True,
         )
+
     st.write(" ") 
 
-  
     st.info("To access the official chat bot trained for over 1000+ Universities, check out [Reach Best](https://app.reachbest.co/signup)!", icon="🧠")
+    
 #     major_topics = [
 #         "Academic Excellence and Opportunities",
 #         "Social networks and Campus Atmosphere",
@@ -183,7 +184,7 @@ with st.sidebar:
 #     with st.expander("Major Specific Aspects:", expanded=False):
 #         major_specific_aspects = "\n".join(f"- <span class='copyable-text'>{topic}</span>" for topic in major_topics)
 #         st.markdown(major_specific_aspects, unsafe_allow_html=True)
-    st.write(" ") 
+    st.divider() 
 
     general_questions = [
         "What type of friends do you get along with and why?",
@@ -395,7 +396,7 @@ if st.session_state.test >= 1:
         advice_message = "🤩 <span style='font-size: 18px; font-weight: bold;'>The major you choose could be a perfect fit for you. Here are our pieces of advices:</span>"
         st.markdown(advice_message, unsafe_allow_html=True)
         col1, col2, col3 = st.columns(3)
-        advice_list = lists[:3] 
+        advice_list = st.session_state.lists[:3] 
         with col1:
             st.markdown("<div style='text-align: center;'>"
                 "<span style='color: orange; font-size: 20px; font-weight: bold;'>"
@@ -413,7 +414,7 @@ if st.session_state.test >= 1:
         advice_message = "😊 <span style='font-size: 18px; font-weight: bold;'>The major you choose could be a good fit for you. Here are our pieces of advices:</span>"
         st.markdown(advice_message, unsafe_allow_html=True)
         col1, col2, col3 = st.columns(3)
-        advice_list = lists[:3] 
+        advice_list = st.session_state.lists[:3] 
         with col1:
             st.markdown("<div style='text-align: center;'>"
                 "<span style='color: orange; font-size: 20px; font-weight: bold;'>"
@@ -432,7 +433,7 @@ if st.session_state.test >= 1:
         advice_message = "😬 <span style='font-size: 18px; font-weight: bold;'>The major you choose could be a reasonable fit for you. Here are our pieces of advices:</span>"
         st.markdown(advice_message, unsafe_allow_html=True)
         col1, col2, col3 = st.columns(3)
-        advice_list = lists[:3] 
+        advice_list = st.session_state.lists[:3] 
         with col1:
             st.markdown("<div style='text-align: center;'>"
                 "<span style='color: orange; font-size: 20px; font-weight: bold;'>"
@@ -451,7 +452,7 @@ if st.session_state.test >= 1:
         advice_message = "😢 <span style='font-size: 18px; font-weight: bold;'>The major you choose could be a bad fit for you. Here are our pieces of advice for you:</span>"
         st.markdown(advice_message, unsafe_allow_html=True)
         col1, col2, col3 = st.columns(3)
-        advice_list = lists[:3] 
+        advice_list = st.session_state.lists[:3] 
         with col1:
             st.markdown("<div style='text-align: center;'>"
                 "<span style='color: orange; font-size: 20px; font-weight: bold;'>"
@@ -482,8 +483,6 @@ if st.session_state.test >= 1:
     st.write(" ") 
     default_option = "Select a University to view reviews"
     university_options = [default_option] + list(st.session_state.df_final["University"].unique())
-    advice_Review = "🔍 <span style='font-size: 18px; font-weight: bold;'> Here are some reviews that maybe relevant to your answer:</span>"
-    st.markdown(advice_Review, unsafe_allow_html=True)
     selected_university = st.selectbox("", university_options)
     st.session_state.selected_university=selected_university
     if selected_university and selected_university != default_option:

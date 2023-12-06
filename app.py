@@ -90,11 +90,11 @@ def map_to_formatted_major(original_major):
     return original_to_formatted.get(original_major, "Unknown Major")
 
 st.set_page_config(
-    page_title="Reach Best ICL Bot", layout="centered", page_icon="logo.png", initial_sidebar_state="expanded"
+    page_title="Reach Best LCM Bot", layout="centered", page_icon="logo.png", initial_sidebar_state="expanded"
 )
 st.write(
     '<div style="text-align: center;">'
-    '<h1 style="color: #E1930F;">Reach Best ICL Bot</h1>'
+    '<h1 style="color: #E1930F;">Reach Best LCM Bot</h1>'
     '</div>',
     unsafe_allow_html=True)
 st.write(" ") 
